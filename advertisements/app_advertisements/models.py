@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.utils.html import format_html
 from django.contrib.auth import get_user_model
 
+
 User = get_user_model()
 
 # Create your models here.
@@ -49,7 +50,7 @@ class Advertisement(models.Model):
         else:
             return '(Нет изображения)'
 
-
-
 class Meta:
     db_table = "advertisements"
+
+

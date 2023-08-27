@@ -1,25 +1,35 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Advertisement
+from .forms import AdvertisemenForm
+from django.urls import reverse, reverse_lazy
+from django.contrib.auth.decorators import login_required
 
 def index(request):
     advertisements = Advertisement.objects.all()
     context = {'advertisements': advertisements}
-    return render(request, 'index.html', context)
+    return render(request, 'app_advertisements/index.html', context)
 
 def top_sellers(request):
-    return render(request, 'top-sellers.html')
+    return render(request, 'app_advertisements/top-sellers.html')
+
+
+
+@login_required(login_url=reverse_lazy('login'))
 
 def advertisement_post(request):
-    return render(request, 'advertisement-post.html')
+    if request.method == "POST":
+        form = AdvertisemenForm(request.POST, request.FILES)
+        if form.is_valid():
+            advertisement = Advertisement(**form.cleaned_data)
+            advertisement.user = request.user
+            advertisement.save()
+            url = reverse('main-page')
+            return redirect(url)
+    else:
+        form = AdvertisemenForm()
+        context = {'form': form}
+        return render(request, 'app_advertisements/advertisement-post.html', context)
 
-def register(request):
-    return render(request, 'register.html')
-
-def login(request):
-    return render(request, 'login.html')
-
-def profile(request):
-    return render(request, 'profile.html')
 
 
 # Create your views here.
