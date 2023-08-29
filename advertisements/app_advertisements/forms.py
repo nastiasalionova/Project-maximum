@@ -1,6 +1,10 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 
-class AdvertisemenForm(forms.Form):
+
+
+class AdvertisemenForm(forms.ModelForm):
     title = forms.CharField(max_length=64, widget=forms.TextInput(attrs={'class': 'form-control form-control-lg'}))
 
     description = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control form-control-lg'}))
@@ -13,5 +17,12 @@ class AdvertisemenForm(forms.Form):
 
 
 
-
-
+class RegisterForm(UserCreationForm):
+    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control form-control-lg'}))
+    name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control form-control-lg'}))
+    surname = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control form-control-lg'}))
+    password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}))
+    password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password confirmation'}))
+    class Meta(UserCreationForm.Meta):
+        model = User
+        fields = UserCreationForm.Meta.fields + ('name', 'surname')
